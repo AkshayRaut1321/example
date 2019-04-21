@@ -1,17 +1,20 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { AppComponent } from './app.component';
-import { CoursesComponent } from './courses.component';
-import { CourseComponent } from './course/course.component';
-import { CoursesService } from './courses.service';
-import { FavoriteComponent } from './favorite/favorite.component';
-import { PanelComponent } from './panel/panel.component';
-import { InputFormatDirective } from './input-format.directive';
-import { ContactFormComponent } from './contact-form/contact-form.component';
+import { NgModule, ErrorHandler } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { SignupFormComponent } from './signup-form/signup-form.component';
-import { NewCourseFormComponent } from './new-course-form/new-course-form.component';
-import { PostsComponent } from './posts/posts.component';
+import { HttpModule } from '@angular/http';
+import { AppComponent } from './components/app/app.component';
+import { CoursesComponent } from './components/courses.component';
+import { CourseComponent } from './components/course/course.component';
+import { CoursesService } from './services/courses.service';
+import { FavoriteComponent } from './components/favorite/favorite.component';
+import { PanelComponent } from './components/panel/panel.component';
+import { InputFormatDirective } from './directives/input-format.directive';
+import { ContactFormComponent } from './contact-form/contact-form.component';
+import { SignupFormComponent } from './components/signup-form/signup-form.component';
+import { NewCourseFormComponent } from './components/new-course-form/new-course-form.component';
+import { PostsComponent } from './components/posts/posts.component';
+import { PostsService } from './services/posts.service';
+import { GlobalErrorHandler } from './common/errors/global-error-handler';
 
 @NgModule({
   declarations: [
@@ -29,9 +32,14 @@ import { PostsComponent } from './posts/posts.component';
   imports: [
     BrowserModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpModule
   ],
-  providers: [CoursesService],
+  providers: [
+    CoursesService,
+    PostsService,
+    {provide : ErrorHandler, useClass : GlobalErrorHandler}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
