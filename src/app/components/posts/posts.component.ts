@@ -16,23 +16,23 @@ export class PostsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.service.getPosts()
-      .subscribe(
-        response => {
-          this.posts = response.json();
-        });
+    this.service.getAll()
+      .subscribe(posts => this.posts = posts);
   }
 
   createPost(input: HTMLInputElement) {
     var post: any = { title: input.value };
-    this.service.createPost(post)
+    this.posts.splice(0, 0, post);
+    input.value = "";
+
+    this.service.create(post)
       .subscribe(
-        response => {
-          post.id = response.json().id;
-          this.posts.splice(0, 0, post);
-          input.value = "";
+        newPost => {
+          Object.assign(post, newPost.json());
         },
         (error: AppError) => {
+          this.posts.splice(0, 1);
+          input.value = post.title;
           if (error instanceof BadRequestError)
             // this.forms.setErrors(error.json());
             alert('Error : Bad input was supplied');
@@ -42,26 +42,26 @@ export class PostsComponent implements OnInit {
   }
 
   updatePost(post) {
-    this.service.updatePost(post)
+    this.service.update(post)
       .subscribe(
-        response => {
-          console.log(response.json());
-          Object.assign(post, response.json());
+        updatedPost => {
+          Object.assign(post, updatedPost);
         });
   }
 
-  deletePost(id) {
-    this.service.deletePost(id)
-      .subscribe(
-        () => {
-          let postIndex = this.posts.findIndex(a => a.id == id);
-          this.posts.splice(postIndex, 1);
-        },
-        (error: AppError) => {
-          if (error instanceof NotFoundError)
-            alert('This post is already deleted');
-          else
-            throw error;
-        });
+  deletePost(post) {
+    // let postIndex = this.posts.findIndex(a => a.id == post.id);
+    // this.posts.splice(postIndex, 1);
+
+    this.service.delete(post.id)
+      .subscribe();
+      //   (error: AppError) => {
+      //     this.posts.splice(postIndex, 0, post);
+
+      //     if (error instanceof NotFoundError)
+      //       alert('This post is already deleted');
+      //     else
+      //       throw error;
+      //   });
   }
 }
