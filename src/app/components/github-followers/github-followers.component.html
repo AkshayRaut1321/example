@@ -6,7 +6,7 @@
   </div>
   <div class="media-body">
     <h6 class="media-heading">
-      <a href="#">{{ follower.login }}</a>
+      <a [routerLink]="[follower.id]">{{ follower.login }}</a>
     </h6>
     <a href="follower.html_url">{{ follower.html_url }}</a>
   </div>
